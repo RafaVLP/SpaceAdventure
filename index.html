@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gacha Space Farm: Aventura Espacial</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root {
+        --color-bg: #02040a;
+        --color-primary: #00f6ff;
+        --color-secondary: #ffb86c;
+        --color-success: #50fa7b;
+        --color-danger: #ff5555;
+        --color-text: #e2e8f0;
+        --color-text-muted: #94a3b8;
+        --color-panel-bg: rgba(10, 20, 40, 0.7);
+        --color-panel-border: rgba(0, 246, 255, 0.2);
+        --color-panel-glow: rgba(0, 246, 255, 0.1);
+      }
+
+      body {
+        background-color: var(--color-bg);
+        color: var(--color-text);
+        font-family: 'Rajdhani', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        background-image:
+          radial-gradient(ellipse at center, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0) 60%),
+          url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZHRoPSI1MCI+CjxyZWN0IHdpZHRoPSI1MCIgaGVpZHRoPSI1MCIgZmlsbD0iIzAyMDQwYSI+PC9yZWN0Pgo8Y2lyY2xlIGN4PSIxMCIgY3k9IjEwIiByPSIwLjUiIGZpbGw9IiNmZmYiPjwvY2lyY2xlPgo8Y2lyY2xlIGN4PSIyNSIgY3k9IjI1IiByPSIwLjUiIGZpbGw9IiNmZmYiPjwvY2lyY2xlPgo8Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSIwLjUiIGZpbGw9IiNmZmYiPjwvY2lyY2xlPgo8Y2lyY2xlIGN4PSIzMiIgY3k9IjE1IiByPSIwLjMiIGZpbGw9IiNmZmYiPjwvY2lyY2xlPgo8Y2lyY2xlIGN4PSIxOCIgY3k9IjM1IiByPSIwLjMiIGZpbGw9IiNmZmYiPjwvY2lyY2xlPgo8L3N2Zz4=');
+        animation: space-scroll 180s linear infinite;
+        overflow: hidden;
+      }
+
+      body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: linear-gradient(rgba(0, 246, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 246, 255, 0.05) 1px, transparent 1px);
+        background-size: 2rem 2rem;
+        animation: grid-scroll 120s linear infinite;
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      body::after {
+          content: '';
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(to bottom, transparent 0%, var(--color-bg) 100%);
+          pointer-events: none;
+          z-index: -1;
+      }
+      
+      #root {
+        overflow-y: auto;
+        height: 100vh;
+      }
+
+      h1, h2, h3, h4, .font-title {
+        font-family: 'Orbitron', sans-serif;
+      }
+
+      @keyframes space-scroll { from { background-position: 0 0; } to { background-position: -5000px 2500px; } }
+      @keyframes grid-scroll { from { background-position: 0 0; } to { background-position: -1024px -1024px; } }
+      
+      .rarity-Common { --rarity-color: #9ca3af; color: var(--rarity-color); }
+      .rarity-Uncommon { --rarity-color: #50fa7b; color: var(--rarity-color); }
+      .rarity-Rare { --rarity-color: #60a5fa; color: var(--rarity-color); }
+      .rarity-Epic { --rarity-color: #c084fc; color: var(--rarity-color); }
+      .rarity-Legendary { --rarity-color: #ffb86c; color: var(--rarity-color); }
+      .rarity-Mythic {
+        --rarity-color: #ff5555;
+        color: var(--rarity-color);
+        text-shadow: 0 0 5px var(--rarity-color), 0 0 10px var(--rarity-color);
+      }
+      .border-rarity { border-color: var(--rarity-color); }
+      .shadow-rarity { box-shadow: 0 0 15px var(--rarity-color); }
+
+      .ui-panel {
+        background-color: var(--color-panel-bg);
+        backdrop-filter: blur(12px) saturate(120%);
+        border: 1px solid var(--color-panel-border);
+        box-shadow: 0 0 30px var(--color-panel-glow), inset 0 0 10px rgba(10, 20, 40, 0.8);
+        clip-path: polygon(0 10px, 10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px));
+      }
+      
+      .ui-button {
+        position: relative;
+        background: linear-gradient(45deg, rgba(0, 246, 255, 0.1), rgba(0, 246, 255, 0.2));
+        border: 1px solid var(--color-panel-border);
+        color: var(--color-primary);
+        font-family: 'Orbitron', sans-serif;
+        font-weight: bold;
+        padding: 0.5rem 1rem;
+        transition: all 0.2s ease-in-out;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        clip-path: polygon(0 5px, 5px 0, calc(100% - 5px) 0, 100% 5px, 100% calc(100% - 5px), calc(100% - 5px) 100%, 5px 100%, 0 calc(100% - 5px));
+        overflow: hidden;
+      }
+      .ui-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+        transition: left 0.3s ease;
+      }
+      .ui-button:hover, .ui-button.active {
+        background-color: var(--color-panel-border);
+        box-shadow: 0 0 15px var(--color-primary);
+        color: white;
+      }
+      .ui-button:hover::before {
+        left: 100%;
+      }
+      .ui-button:disabled {
+        border-color: rgba(100, 116, 139, 0.2);
+        background: rgba(100, 116, 139, 0.1);
+        color: rgba(100, 116, 139, 0.5);
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+      .ui-button:disabled::before {
+        display: none;
+      }
+      
+      .ui-tab {
+        background: transparent;
+        border-bottom: 3px solid transparent;
+        color: var(--color-text-muted);
+        font-family: 'Orbitron', sans-serif;
+        font-weight: bold;
+        padding: 0.75rem 1rem;
+        transition: all 0.2s ease-in-out;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+      }
+      .ui-tab.active, .ui-tab:hover {
+        color: var(--color-primary);
+        text-shadow: 0 0 8px var(--color-primary);
+      }
+      .ui-tab.active {
+        border-bottom-color: var(--color-primary);
+      }
+      
+      @keyframes fade-in-up {
+        from { opacity: 0; transform: translateY(20px) scale(0.98); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+      }
+      .animate-fade-in-up {
+        animation: fade-in-up 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+      }
+
+      @keyframes slide-in-and-fade {
+        from { opacity: 0; transform: translateX(-20px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+      .animate-resource-gain {
+        animation: slide-in-and-fade 0.5s ease-out forwards;
+        opacity: 0;
+      }
+
+      @keyframes damage-flash-anim {
+        0% { opacity: 0.7; }
+        100% { opacity: 0; }
+      }
+      .damage-flash-overlay {
+        position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+        background: radial-gradient(ellipse at center, rgba(255, 50, 50, 0.6) 0%, rgba(255, 50, 50, 0) 70%);
+        pointer-events: none; opacity: 0;
+        animation: damage-flash-anim 0.4s ease-out forwards;
+        z-index: 20;
+      }
+      
+      .scan-line-effect::after {
+        content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+        background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+        animation: scan-line 2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+        box-shadow: 0 0 10px var(--color-primary); opacity: 0;
+      }
+      .scanning .scan-line-effect::after { opacity: 1; }
+      @keyframes scan-line { 0% { transform: translateY(-100%); opacity: 0.6; } 50% { opacity: 1; } 100% { transform: translateY(100%); opacity: 0.6; } }
+
+      .critical-success-animation {
+        background: linear-gradient(270deg, var(--color-panel-bg), rgba(251, 146, 60, 0.4), var(--color-panel-bg));
+        background-size: 200% 200%;
+        animation: critical-success-bg 3s ease-in-out infinite;
+      }
+      @keyframes critical-success-bg { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+      .critical-success-text { animation: text-flicker 1.5s ease-in-out infinite; }
+      @keyframes text-flicker { 0%, 100% { text-shadow: 0 0 8px #fb923c, 0 0 16px #fb923c, 0 0 24px #f59e0b; } 50% { text-shadow: 0 0 6px #fb923c, 0 0 12px #fb923c, 0 0 20px #f59e0b; } }
+
+      .combat-victory-animation {
+        border-color: var(--color-success) !important;
+        animation: combat-victory-glow 2s ease-in-out infinite;
+      }
+      @keyframes combat-victory-glow { 0%, 100% { box-shadow: 0 0 10px var(--color-success), inset 0 0 5px rgba(80, 250, 123, 0.3); } 50% { box-shadow: 0 0 20px var(--color-success), inset 0 0 8px rgba(80, 250, 123, 0.4); } }
+      
+      /* Custom input styles */
+      .ui-input {
+        background-color: rgba(0,0,0,0.3);
+        border: 1px solid var(--color-panel-border);
+        color: var(--color-text);
+        padding: 0.5rem;
+        clip-path: polygon(0 3px, 3px 0, calc(100% - 3px) 0, 100% 3px, 100% calc(100% - 3px), calc(100% - 3px) 100%, 3px 100%, 0 calc(100% - 3px));
+        transition: all 0.2s ease;
+      }
+      .ui-input:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 10px var(--color-primary);
+      }
+
+      /* Custom slider styles */
+      input[type=range].ui-slider {
+        -webkit-appearance: none;
+        width: 100%;
+        background: transparent;
+      }
+      input[type=range].ui-slider:focus {
+        outline: none;
+      }
+      input[type=range].ui-slider::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 4px;
+        cursor: pointer;
+        background: var(--color-panel-border);
+        border-radius: 2px;
+      }
+      input[type=range].ui-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 20px;
+        width: 10px;
+        background: var(--color-primary);
+        cursor: pointer;
+        margin-top: -8px;
+        clip-path: polygon(0% 25%, 100% 0%, 100% 100%, 0% 75%);
+        box-shadow: 0 0 8px var(--color-primary);
+      }
+      input[type=range].ui-slider::-moz-range-track {
+        width: 100%;
+        height: 4px;
+        cursor: pointer;
+        background: var(--color-panel-border);
+        border-radius: 2px;
+      }
+      input[type=range].ui-slider::-moz-range-thumb {
+        height: 20px;
+        width: 10px;
+        border: none;
+        background: var(--color-primary);
+        cursor: pointer;
+        clip-path: polygon(0% 25%, 100% 0%, 100% 100%, 0% 75%);
+        box-shadow: 0 0 8px var(--color-primary);
+      }
+      .planet-label {
+        color: #e2e8f0;
+        font-family: 'Orbitron', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 14px;
+        padding: 4px 8px;
+        background-color: rgba(15, 23, 42, 0.8);
+        border: 1px solid var(--color-primary);
+        pointer-events: none;
+        user-select: none;
+        box-shadow: 0 0 8px var(--color-primary);
+        clip-path: polygon(0 3px, 3px 0, calc(100% - 3px) 0, 100% 3px, 100% calc(100% - 3px), calc(100% - 3px) 100%, 3px 100%, 0 calc(100% - 3px));
+        text-align: center;
+        line-height: 1.2;
+      }
+      .planet-label small {
+          font-size: 11px;
+          color: var(--color-text-muted);
+          font-family: 'Rajdhani', sans-serif;
+          font-weight: 600;
+      }
+    </style>
+  <!-- Add Babel for in-browser JSX/TSX transpilation -->
+  <script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
+  <script async src="https://unpkg.com/es-module-shims@1.10.0/dist/es-module-shims.js"></script>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "three": "https://unpkg.com/three@0.165.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.165.0/examples/jsm/",
+    "three/": "https://aistudiocdn.com/three@^0.180.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.19.0",
+    "firebase/": "https://aistudiocdn.com/firebase@^12.2.1/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <!-- Load the main React application script, transpiled by Babel -->
+    <script type="text/babel" data-type="module" src="./index.tsx"></script>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
