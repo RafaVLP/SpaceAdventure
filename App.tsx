@@ -2,20 +2,20 @@
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { GoogleGenAI } from "@google/genai";
 
-import { GameScreen } from './components/GameScreen.tsx';
-import { ShopScreen } from './components/GachaScreen.tsx';
-import { UpgradeScreen } from './components/UpgradeScreen.tsx';
-import { MainMenu } from './components/MainMenu.tsx';
-import { Header } from './components/Header.tsx';
-import { InventoryScreen } from './components/InventoryScreen.tsx';
-import { FarmScreen } from './components/FarmScreen.tsx';
-import { MissionScreen } from './components/MissionScreen.tsx';
-import { DeepSpaceScreen } from './components/DeepSpaceScreen.tsx';
-import { AutoPilotScreen } from './components/AutoPilotScreen.tsx';
-import type { GameState, Resources, ShipStats, Item, Location, Expedition, ExpeditionResult, GachaCapsule, Rarity, PlayerState, ShipStat, RandomEventOption, RandomEventResult, RandomEventSkillCheck, FarmState, Ship, FarmPlot, MissionState, Mission, MissionReward, DeepSpaceExpedition, DeepSpaceLocation, AutoPilotState, AutoPilotExpedition, RandomEvent } from './types.ts';
-import { GameStateEnum } from './types.ts';
-import { LOCATIONS, INITIAL_RESOURCES, FUEL, CREDITS, RESOURCE_DEFINITIONS, UPGRADE_DEFINITIONS, ITEMS, RARITY_SELL_VALUES, CAPSULE_CONTENTS_BY_RARITY, INITIAL_PLAYER_STATE, BASE_XP_TO_LEVEL_UP, XP_SCALING_FACTOR, ENEMIES, RANDOM_EVENTS, INITIAL_FARM_STATE, PLANTS, SHIP_RARITY_CHANCES, SHIP_STATS_BY_RARITY, MAX_SHIELDS, SHIP_BOX_BASE_COST, SHIP_BOX_LEVEL_SCALE, SHIELD_BASE_COST, SHIELD_LEVEL_SCALE, INITIAL_MISSION_STATE, MISSION_REFRESH_INTERVAL_MS, MAX_ACCEPTED_MISSIONS, MISSION_TEMPLATES, DEEP_SPACE_LOCATIONS, FUEL_CAPSULE, REPAIR_CAPSULE, INITIAL_AUTO_PILOT_STATE } from './constants.ts';
-import { calculateCombatPower } from './utils.ts';
+import { GameScreen } from './components/GameScreen';
+import { ShopScreen } from './components/GachaScreen';
+import { UpgradeScreen } from './components/UpgradeScreen';
+import { MainMenu } from './components/MainMenu';
+import { Header } from './components/Header';
+import { InventoryScreen } from './components/InventoryScreen';
+import { FarmScreen } from './components/FarmScreen';
+import { MissionScreen } from './components/MissionScreen';
+import { DeepSpaceScreen } from './components/DeepSpaceScreen';
+import { AutoPilotScreen } from './components/AutoPilotScreen';
+import type { GameState, Resources, ShipStats, Item, Location, Expedition, ExpeditionResult, GachaCapsule, Rarity, PlayerState, ShipStat, RandomEventOption, RandomEventResult, RandomEventSkillCheck, FarmState, Ship, FarmPlot, MissionState, Mission, MissionReward, DeepSpaceExpedition, DeepSpaceLocation, AutoPilotState, AutoPilotExpedition, RandomEvent } from './types';
+import { GameStateEnum } from './types';
+import { LOCATIONS, INITIAL_RESOURCES, FUEL, CREDITS, RESOURCE_DEFINITIONS, UPGRADE_DEFINITIONS, ITEMS, RARITY_SELL_VALUES, CAPSULE_CONTENTS_BY_RARITY, INITIAL_PLAYER_STATE, BASE_XP_TO_LEVEL_UP, XP_SCALING_FACTOR, ENEMIES, RANDOM_EVENTS, INITIAL_FARM_STATE, PLANTS, SHIP_RARITY_CHANCES, SHIP_STATS_BY_RARITY, MAX_SHIELDS, SHIP_BOX_BASE_COST, SHIP_BOX_LEVEL_SCALE, SHIELD_BASE_COST, SHIELD_LEVEL_SCALE, INITIAL_MISSION_STATE, MISSION_REFRESH_INTERVAL_MS, MAX_ACCEPTED_MISSIONS, MISSION_TEMPLATES, DEEP_SPACE_LOCATIONS, FUEL_CAPSULE, REPAIR_CAPSULE, INITIAL_AUTO_PILOT_STATE } from './constants';
+import { calculateCombatPower } from './utils';
 
 const SHIP_PREFIXES = ['Stellar', 'Void', 'Nova', 'Astro', 'Cosmic', 'Orion', 'Pegasus', 'Andromeda'];
 const SHIP_SUFFIXES = ['Voyager', 'Drifter', 'Explorer', 'Interceptor', 'Javelin', 'Harbinger', 'Comet', 'Pioneer'];
