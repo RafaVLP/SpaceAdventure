@@ -1,4 +1,4 @@
-import type { ShipStats, Location } from './types';
+import type { ShipStats, Location } from './types.ts';
 
 export const calculateCombatPower = (stats: ShipStats): number => {
     const power = 

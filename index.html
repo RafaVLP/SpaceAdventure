@@ -286,20 +286,13 @@
           font-weight: 600;
       }
     </style>
-  <!-- Add Babel for in-browser JSX/TSX transpilation -->
-  <script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
-  <script async src="https://unpkg.com/es-module-shims@1.10.0/dist/es-module-shims.js"></script>
-  <script type="importmap">
+<script type="importmap">
 {
   "imports": {
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.19.0",
     "react/": "https://aistudiocdn.com/react@^19.1.1/",
     "react": "https://aistudiocdn.com/react@^19.1.1",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
-    "three": "https://unpkg.com/three@0.165.0/build/three.module.js",
-    "three/addons/": "https://unpkg.com/three@0.165.0/examples/jsm/",
-    "three/": "https://aistudiocdn.com/three@^0.180.0/",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.19.0",
-    "firebase/": "https://aistudiocdn.com/firebase@^12.2.1/"
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/"
   }
 }
 </script>
@@ -307,8 +300,6 @@
 </head>
   <body>
     <div id="root"></div>
-    <!-- Load the main React application script, transpiled by Babel -->
-    <script type="text/babel" data-type="module" src="./index.tsx"></script>
-  <script type="module" src="/index.tsx"></script>
-</body>
+    <script type="module" src="/index.tsx"></script>
+  </body>
 </html>
